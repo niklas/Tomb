@@ -1,3 +1,5 @@
+# On Debian/Ubuntu you need the following packages:
+# omake git ocaml-nox
 module Gibak
   class Dependencies
     include Singleton
@@ -12,20 +14,20 @@ module Gibak
 
     def met?
       self.errors = []
-      %w(omake).all? do |dep|
-        self.send "check_for_#{dep}"
-      end
+      %w(omake git bash).all? do |bin|
+        check_for_executable_in_path(bin)
+      end &&
+        check_for_ocaml_dev
     end
     
     private
-    def check_for_omake
-      check_for_executable_in_path('omake')
+    def check_for_ocaml_dev
+      check_for_executable_in_path('ocamlbuild', "Please install ocaml-nox")
     end
-
-    def check_for_executable_in_path(name)
+    def check_for_executable_in_path(name, message=nil)
       bin = `which #{name}`.chomp
       unless File.executable? bin
-        self.errors << "please install #{name}"
+        self.errors << (message || "please install #{name}")
         false
       else
         true

@@ -8,7 +8,7 @@ module Gibak
     end
 
     def self.build!
-      system %Q~cd '#{LibDir}' && omake~
+      omake || raise("cannot build gibak")
     end
 
     def self.build
@@ -16,6 +16,15 @@ module Gibak
         raise "missing dependencies: #{Dependencies.errors.join(', ')}"
       end
       build! unless executables_exist?
+    end
+
+    def self.clean!
+      omake('clean')
+    end
+
+    private
+    def self.omake(target=nil)
+      system(%Q~cd '#{LibDir}' && omake #{target}~)
     end
   end
 end
