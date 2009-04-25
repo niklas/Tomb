@@ -1,0 +1,3 @@
+[submodule "vendor/lib/gibak"]
+	path = vendor/lib/gibak
+	url = http://eigenclass.org/repos/git/gibak/.git/
