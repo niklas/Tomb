@@ -1,0 +1,10 @@
+#!/usr/bin/ruby
+
+
+require 'rubygems'
+require 'activesupport'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/gibak')
+
+
+gibak = Gibak::Base.new
+puts gibak.hello
