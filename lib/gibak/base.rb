@@ -8,17 +8,24 @@ module Gibak
       run('init')
     end
 
-    # returns the changed files
-    #   like: gitbak ls-change-files
-    def changed_files
-      pipe('ls-changed-files') do |io|
+    %w(changed new ignored newly-ignored).each do |filegroup|
+      class_eval <<-EODEF
+        def ls_#{filegroup.underscore}_files(&block)
+          ls('#{filegroup}-files', &block)
+        end
+      EODEF
+    end
+
+    private
+
+    def ls(what='changed-files')
+      pipe("ls-#{what}") do |io|
         while line = io.gets
           yield line
         end
       end
     end
 
-    private
     def run(action, *args)
       Mount.mount
       command = build_command(action, *args)
