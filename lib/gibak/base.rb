@@ -4,6 +4,8 @@ module Gibak
     # Initialises the gibak repos
     #   like: gitbak init
     def init
+      Logger.info("Initializing.. this can take a while.")
+      run('init')
     end
 
     # returns the changed files
