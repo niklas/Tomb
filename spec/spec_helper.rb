@@ -1,6 +1,2 @@
-#!/usr/bin/ruby
-
 require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
-
-gibak = Gibak::Base.new
-puts gibak.hello
+require 'spec'
