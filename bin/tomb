@@ -5,4 +5,9 @@ require File.expand_path(File.dirname(__FILE__) + '/../config/environment')
 
 Gibak::Build.build
 gibak = Gibak::Base.new
-puts gibak.hello
+
+gibak.changed_files do |file|
+  puts "changed: #{file}"
+end
+
+Gibak::Mount.umount

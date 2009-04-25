@@ -14,7 +14,7 @@ module Gibak
 
     def met?
       self.errors = []
-      %w(omake git bash).all? do |bin|
+      %w(omake git bash fusermount sshfs).all? do |bin|
         check_for_executable_in_path(bin)
       end &&
         check_for_ocaml_dev

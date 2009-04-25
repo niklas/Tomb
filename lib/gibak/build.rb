@@ -1,9 +1,8 @@
 module Gibak
   class Build
-    LibDir = File.expand_path(File.dirname(__FILE__)) + '/../../vendor/lib/gibak'
     def self.executables_exist?
       %w(find-git-files find-git-repos gibak ometastore).all? do |ex|
-        File.executable? File.join(LibDir,ex)
+        File.executable? File.join(GibakDir,ex)
       end
     end
 
@@ -24,7 +23,7 @@ module Gibak
 
     private
     def self.omake(target=nil)
-      system(%Q~cd '#{LibDir}' && omake #{target}~)
+      system(%Q~cd '#{GibakDir}' && omake #{target}~)
     end
   end
 end
