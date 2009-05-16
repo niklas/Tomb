@@ -29,6 +29,10 @@ module Tomb
     def on_refresh_clicked
       filelist.update
     end
+
+    def on_filter_changed
+      STDERR.puts "filtering.."
+    end
   end
 
   class FileList
