@@ -9,4 +9,3 @@ Gibak::Build.build
 window = Tomb::Window.new
 window.show!
 
-Gibak::Mount.umount

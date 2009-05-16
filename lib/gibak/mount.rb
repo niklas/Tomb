@@ -1,28 +1,27 @@
 module Gibak
-  MountPoint = ENV['HOME'] + '/.git'
   Options = %w(auto_cache )
-  class Mount
-    def self.mount
+  module Mount
+    def mount
       mount! unless mounted?
     end
 
-    def self.mount!
-      FileUtils.mkdir_p MountPoint
-      Logger.info("mounting #{MountPoint}")
-      system(%Q~sshfs cinema:/media/home/niklas/wigowyr_gibak #{MountPoint}~)
+    def mount!
+      FileUtils.mkdir_p dir
+      Logger.info("mounting #{dir}")
+      system(%Q~sshfs cinema:/media/home/niklas/wigowyr_gibak #{dir}~)
     end
 
-    def self.mounted?
-      File.exists? File.join(MountPoint, 'HEAD')
+    def mounted?
+      exists?
     end
 
-    def self.umount
+    def umount
       umount! if mounted?
     end
 
-    def self.umount!
-      Logger.info("umounting #{MountPoint}")
-      system(%Q~fusermount -u #{MountPoint}~)
+    def umount!
+      Logger.info("umounting #{dir}")
+      system(%Q~fusermount -u #{dir}~)
     end
   end
 end

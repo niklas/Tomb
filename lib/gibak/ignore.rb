@@ -1,8 +1,7 @@
 module Gibak
-  IgnoreFile = ENV['HOME'] + '/.gitignore'
-  class Ignore
-    def initialize
-      @file = IgnoreFile
+  module Ignore
+    def ignore_file
+      File.dirname(dir) + '/.gitignore'
     end
   end
 end

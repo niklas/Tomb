@@ -1,9 +1,17 @@
 module Gibak
+  include Mount
+  include Ignore
+  include Logging
   GibakDir = File.expand_path(File.dirname(__FILE__)) + '/../../vendor/lib/gibak'
+  MountPoint = ENV['HOME'] + '/.git'
   class Base
+    attr_accessor :dir
+    def initialize(dir = MountPoint)
+      @dir = dir
+    end
     # Initialises the gibak repos
     #   like: gitbak init
-    def init
+    def init!
       Logger.info("Initializing.. this can take a while.")
       run('init')
     end
@@ -14,6 +22,10 @@ module Gibak
           ls('#{filegroup}-files', &block)
         end
       EODEF
+    end
+
+    def exists?
+      File.exists? @dir
     end
 
     private
@@ -27,14 +39,14 @@ module Gibak
     end
 
     def run(action, *args)
-      Mount.mount
+      mount
       command = build_command(action, *args)
       Logger.debug("running #{command}")
       system(command)
     end
 
     def pipe(action, *args)
-      Mount.mount
+      mount
       command = build_command(action, *args)
       Logger.debug("reading from #{command}")
       open "|#{command}" do |io| 
@@ -42,6 +54,7 @@ module Gibak
       end
     end
 
+    # TODO consider #dir
     def build_command(action, *args)
       %Q~#{gibak_path} #{action} #{args.join(' ')}~
     end

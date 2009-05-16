@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'activesupport'
-require File.expand_path(File.dirname(__FILE__) + '/../lib/gibak')
 require 'gtk2'
+require 'libglade2'
+require File.expand_path(File.dirname(__FILE__) + '/../lib/gibak')
 
 
