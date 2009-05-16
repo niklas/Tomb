@@ -7,6 +7,8 @@ module Tomb
 
     def initialize
       @glade = GladeXML.new(GladePath) {|handler| method(handler)}
+      @scroller = @glade['List']
+      @filelist = FileList.new @scroller
     end
 
     def show!
@@ -19,18 +21,24 @@ module Tomb
     end
 
     def on_quit_clicked
+      filelist.destroy
       quit
+    end
+
+    def on_refresh_clicked
+      filelist.update
     end
   end
 
   class FileList
     attr_reader :store, :view, :gibak
     Path = 0
-    def initialize
+    def initialize(container)
       @store = Gtk::ListStore.new(String)
       @store.set_default_sort_func {|a,b| a[Path] <=> b[Path] }
       @view = Gtk::TreeView.new(@store)
-      setup_tree_view(@view)
+      container.add view
+      setup_tree_view
       @gibak = Gibak::Base.new
     end
 
@@ -42,7 +50,7 @@ module Tomb
       end
     end
 
-    def setup_tree_view(view)
+    def setup_tree_view
       renderer = Gtk::CellRendererText.new
       column = Gtk::TreeViewColumn.new("Path", renderer, :text => Path)
       view.append_column(column)
@@ -50,7 +58,7 @@ module Tomb
     end
 
     def destroy
-      @gibak.unmount
+      gibak.unmount
     end
   end
 end

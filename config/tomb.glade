@@ -24,6 +24,19 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkToolButton" id="Refresh">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Refresh</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-refresh</property>
+                <signal name="clicked" handler="on_refresh_clicked"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -72,17 +85,13 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkScrolledWindow" id="scrolledwindow1">
+          <widget class="GtkScrolledWindow" id="List">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
             <property name="vscrollbar_policy">automatic</property>
             <child>
-              <widget class="GtkTreeView" id="FilesView">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="search_column">0</property>
-              </widget>
+              <placeholder/>
             </child>
           </widget>
           <packing>

@@ -1,5 +1,5 @@
 module Gibak
-  include Mount
+  #include Mount
   include Ignore
   include Logging
   GibakDir = File.expand_path(File.dirname(__FILE__)) + '/../../vendor/lib/gibak'
@@ -26,6 +26,14 @@ module Gibak
 
     def exists?
       File.exists? @dir
+    end
+
+    def mount
+      true # stub out sshfs mounting..
+    end
+
+    def unmount
+      true # same as mount
     end
 
     private
