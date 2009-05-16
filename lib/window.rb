@@ -2,13 +2,14 @@ module Tomb
   class Window
     attr_reader :filelist
     attr_reader :glade
+    attr_reader :scroller
 
     GladePath = File.expand_path(File.dirname(__FILE__)) + '/../config/tomb.glade'
 
     def initialize
       @glade = GladeXML.new(GladePath) {|handler| method(handler)}
       @scroller = @glade['List']
-      @filelist = FileList.new @scroller
+      @filelist = FileList.new scroller
     end
 
     def show!
@@ -16,13 +17,13 @@ module Tomb
       Gtk.main
     end
 
-    def quit
+    def gtk_main_quit
       Gtk.main_quit
     end
 
     def on_quit_clicked
       filelist.destroy
-      quit
+      gtk_main_quit
     end
 
     def on_refresh_clicked
