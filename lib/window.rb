@@ -2,19 +2,22 @@ module Tomb
   class Window
     attr_reader :filelist
     attr_reader :glade
-    attr_reader :scroller
+    attr_reader :scroller, :busy, :progress
 
     GladePath = File.expand_path(File.dirname(__FILE__)) + '/../config/tomb.glade'
 
     def initialize
       @glade = GladeXML.new(GladePath) {|handler| method(handler)}
-      @scroller = @glade['List']
+      @scroller = glade['List']
+      @busy     = glade['BusyPopup']
+      @progress = glade['BusyProgress']
       @filelist = FileList.new scroller
       @current_filegroup = 'new'
+      GLib::Timeout.add(1000) { update_filelist; false }
     end
 
     def show!
-      @glade["MainWindow"].show_all
+      glade["MainWindow"].show_all
       Gtk.main
     end
 
@@ -29,6 +32,17 @@ module Tomb
 
     def on_refresh_clicked
       update_filelist
+    end
+
+    def beeing_busy(message='Busy...')
+      Thread.new do
+        $progress = progress
+        progress.text = message
+        progress.pulse
+        busy.show_all
+        yield progress
+        busy.hide_all
+      end
     end
 
 
@@ -61,7 +75,9 @@ module Tomb
 
     def update_filelist(filegroup = @current_filegroup)
       @current_filegroup = filegroup
-      filelist.update(filegroup)
+      beeing_busy "loading #{filegroup} files" do
+        filelist.update(filegroup)
+      end
     end
 
     def on_create_ignore_button_clicked
@@ -89,6 +105,7 @@ module Tomb
     def update(which)
       store.clear
       gibak.ls(which) do |path|
+        $progress.pulse
         iter = store.append
         store.set_value iter, Path, path.chomp
       end
