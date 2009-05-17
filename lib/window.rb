@@ -35,14 +35,15 @@ module Tomb
     end
 
     def beeing_busy(message='Busy...')
-      Thread.new do
-        $progress = progress
-        progress.text = message
+      progress.text = message
+      busy.show_all
+      thread = Thread.start { yield }
+      while thread.alive?
         progress.pulse
-        busy.show_all
-        yield progress
-        busy.hide_all
+        Gtk.main_iteration while(Gtk.events_pending?)
+        sleep 0.2
       end
+      busy.hide_all
     end
 
 
