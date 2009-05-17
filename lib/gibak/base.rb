@@ -19,7 +19,7 @@ module Gibak
     %w(changed new ignored newly-ignored).each do |filegroup|
       class_eval <<-EODEF
         def ls_#{filegroup.underscore}_files(&block)
-          ls('#{filegroup}-files', &block)
+          ls('#{filegroup}', &block)
         end
       EODEF
     end
@@ -36,15 +36,15 @@ module Gibak
       true # same as mount
     end
 
-    private
-
-    def ls(what='changed-files')
-      pipe("ls-#{what}") do |io|
+    def ls(what='changed')
+      pipe("ls-#{what}-files") do |io|
         while line = io.gets
           yield line
         end
       end
     end
+
+    private
 
     def run(action, *args)
       mount

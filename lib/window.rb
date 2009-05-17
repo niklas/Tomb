@@ -33,6 +33,14 @@ module Tomb
     def on_filter_changed(entry)
       filelist.filter_string = entry.text
     end
+
+    %w(changed new ignored newly-ignored).each do |filegroup|
+      class_eval <<-EODEF
+        def on_#{filegroup.underscore}_files_button_clicked(button)
+          filelist.update('#{filegroup}')
+        end
+      EODEF
+    end
   end
 
   class FileList
@@ -46,9 +54,9 @@ module Tomb
       @gibak = Gibak::Base.new
     end
 
-    def update
+    def update(which)
       store.clear
-      gibak.ls_new_files do |path|
+      gibak.ls(which) do |path|
         iter = store.append
         store.set_value iter, Path, path.chomp
       end
