@@ -31,8 +31,24 @@ module Tomb
       filelist.update
     end
 
+
     def on_filter_changed(entry)
+      stop_filter_timer
+      @filter_timer = GLib::Timeout.add(500) { filter_timeout_reached(entry); false }
+    end
+    def filter_timeout_reached(entry)
       filelist.filter_string = entry.text
+      stop_filter_timer
+    end
+    def stop_filter_timer
+      if @filter_timer
+        if GLib::Source.respond_to?(:remove)
+          GLib::Source.remove(@filter_timer)
+        else
+          Gtk.timeout_remove(@filter_timer)
+        end
+        @filter_timer = nil
+      end
     end
 
     %w(changed new ignored newly-ignored).each do |filegroup|
