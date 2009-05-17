@@ -50,7 +50,7 @@ module Tomb
       store.clear
       gibak.ls_new_files do |path|
         iter = store.append
-        store.set_value iter, Path, path
+        store.set_value iter, Path, path.chomp
       end
     end
 
