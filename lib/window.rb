@@ -37,11 +37,12 @@ module Tomb
     def beeing_busy(message='Busy...')
       progress.text = message
       busy.show_all
+      Thread.abort_on_exception = true
       thread = Thread.start { yield }
       while thread.alive?
         progress.pulse
-        Gtk.main_iteration while(Gtk.events_pending?)
-        sleep 0.2
+        Gtk.main_iteration while Gtk.events_pending?
+        sleep 0.1
       end
       busy.hide_all
     end
@@ -106,7 +107,6 @@ module Tomb
     def update(which)
       store.clear
       gibak.ls(which) do |path|
-        $progress.pulse
         iter = store.append
         store.set_value iter, Path, path.chomp
       end
