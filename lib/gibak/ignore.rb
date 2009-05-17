@@ -1,5 +1,8 @@
 module Gibak
   module Ignore
+    DirectoryRegexp    = %r~^(.*)/$~
+    IncludeSlashRegexp = %r~/~
+
     def ignore_file
       File.dirname(dir) + '/.gitignore'
     end
@@ -9,11 +12,11 @@ module Gibak
       case filter
       when nil
         false
-      when %r~^(.*)/$~     # directories
+      when DirectoryRegexp
         path.ends_with? filter
-      when %r~/~           # shell glob agains path
+      when IncludeSlashRegexp
         File.fnmatch(filter, path, File::FNM_PATHNAME)
-      else                 # shell glob agains filename
+      else
         File.fnmatch(filter, File.basename(path), File::FNM_PATHNAME)
       end
     end
