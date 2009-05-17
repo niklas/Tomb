@@ -1,10 +1,10 @@
 module Gibak
   #include Mount
-  include Ignore
-  include Logging
   GibakDir = File.expand_path(File.dirname(__FILE__)) + '/../../vendor/lib/gibak'
   MountPoint = ENV['HOME'] + '/.git'
   class Base
+    include Ignore
+    include Logging
     attr_accessor :dir
     def initialize(dir = MountPoint)
       @dir = dir

@@ -10,6 +10,7 @@ module Tomb
       @glade = GladeXML.new(GladePath) {|handler| method(handler)}
       @scroller = @glade['List']
       @filelist = FileList.new scroller
+      filelist.update('new')
     end
 
     def show!
@@ -81,14 +82,10 @@ module Tomb
 
       store.set_default_sort_func {|a,b| a[Path] <=> b[Path] }
 
-      @filter_string = ''
+      @filter_string = nil
       filtered_store.set_visible_func do |model, iter|
-        path_visible? iter[Path]
+        filter_string.blank? || gibak.ignore_path_with?(iter[Path], filter_string)
       end
-    end
-
-    def path_visible?(path)
-      filter_string.blank? || path.include?(filter_string)
     end
 
     def destroy
