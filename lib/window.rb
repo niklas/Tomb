@@ -10,7 +10,7 @@ module Tomb
       @glade = GladeXML.new(GladePath) {|handler| method(handler)}
       @scroller = @glade['List']
       @filelist = FileList.new scroller
-      filelist.update('new')
+      @current_filegroup = 'new'
     end
 
     def show!
@@ -28,7 +28,7 @@ module Tomb
     end
 
     def on_refresh_clicked
-      filelist.update
+      update_filelist
     end
 
 
@@ -54,9 +54,24 @@ module Tomb
     %w(changed new ignored newly-ignored).each do |filegroup|
       class_eval <<-EODEF
         def on_#{filegroup.underscore}_files_button_clicked(button)
-          filelist.update('#{filegroup}')
+          update_filelist('#{filegroup}')
         end
       EODEF
+    end
+
+    def update_filelist(filegroup = @current_filegroup)
+      @current_filegroup = filegroup
+      filelist.update(filegroup)
+    end
+
+    def on_create_ignore_button_clicked
+      filter = glade['Filter']
+      rule = filter.text.strip
+      unless rule.blank?
+        filelist.gibak.append_ignore(rule) 
+        filter.text = ''
+        update_filelist
+      end
     end
   end
 

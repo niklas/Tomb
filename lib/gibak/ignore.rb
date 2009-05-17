@@ -15,9 +15,16 @@ module Gibak
       when DirectoryRegexp
         path.ends_with? filter
       when IncludeSlashRegexp
-        File.fnmatch(filter, path, File::FNM_PATHNAME)
+        File.fnmatch(filter, path, File::FNM_PATHNAME) || 
+          File.fnmatch(filter, File.dirname(path) + '/', File::FNM_PATHNAME)
       else
         File.fnmatch(filter, File.basename(path), File::FNM_PATHNAME)
+      end
+    end
+
+    def append_ignore(rule)
+      File.open(ignore_file, 'a+') do |file|
+        file.puts rule
       end
     end
   end

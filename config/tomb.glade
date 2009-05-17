@@ -51,7 +51,7 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="hbox1">
+          <widget class="GtkHBox" id="FilterBox">
             <property name="visible">True</property>
             <child>
               <widget class="GtkLabel" id="FilterLabel">
@@ -75,10 +75,12 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="GoButton">
+              <widget class="GtkButton" id="create_ignore_button">
+                <property name="label" translatable="yes">Ignore</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <signal name="clicked" handler="on_create_ignore_button_clicked"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
